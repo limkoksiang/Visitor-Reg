@@ -334,9 +334,15 @@ Arrival Time
                 const message = generateMessage();
                 const encodedMessage = encodeURIComponent(message);
 
-                const whatsappUrl = `https://wa.me/${cleanPhone}?text=${encodedMessage}`;
-                window.open(whatsappUrl, '_blank');
-                showToast('Opening WhatsApp to send pass to security guard!');
+                  // Create universal WhatsApp URL
+                const whatsappUrl = `https://api.whatsapp.com/send?phone=${cleanPhone}&text=${encodedMessage}`;
+                
+                showToast('Opening WhatsApp to send pass...');
+                
+                // Use location.href for robust navigation on mobile and desktop
+                setTimeout(() => {
+                    window.location.href = whatsappUrl;
+                }, 300);
             });
         });
     </script>
