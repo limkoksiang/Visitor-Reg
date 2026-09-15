@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visitor Pass Pre-Registration</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        /* Custom scrollbar styling */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: rgba(15, 23, 42, 0.6); }
+        ::-webkit-scrollbar-thumb { background: rgba(51, 65, 85, 0.8); border-radius: 3px; }
+    </style>
+</head>
+<body class="h-full bg-slate-900 text-slate-100 flex flex-col justify-between antialiased">
+
+    <header class="bg-slate-800/80 backdrop-blur-md border-b border-slate-700/50 sticky top-0 z-50 px-4 py-3 sm:px-6">
+        <div class="max-w-xl mx-auto flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold text-lg border border-emerald-500/30">
+                    <i class="fa-solid fa-shield-halved"></i>
+                </div>
+                <div>
+                    <h1 class="text-base font-bold text-white tracking-tight">Security Pass Hub</h1>
+                    <p class="text-xs text-slate-400">Quick Visitor Pre-Registration</p>
+                </div>
+            </div>
+            <div class="flex items-center space-x-2">
+                <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse mr-1.5"></span>
+                    Guard Connected
+                </span>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-grow px-4 py-6 sm:px-6 overflow-y-auto">
+        <div class="max-w-xl mx-auto space-y-6">
+
+            <!-- Notification Toast / Custom Message Box -->
+            <div id="toast" class="hidden transform transition-all duration-300 ease-out translate-y-2 opacity-0 p-4 rounded-xl border text-sm flex items-center space-x-3 shadow-lg">
+                <i id="toastIcon" class="fa-solid text-lg"></i>
+                <div id="toastMessage" class="font-medium"></div>
+            </div>
+
+            <!-- Form Card -->
+            <div class="bg-slate-800/60 backdrop-blur-xl border border-slate-700/60 rounded-2xl p-5 sm:p-6 shadow-xl">
+                <div class="flex items-center justify-between mb-5">
+                    <h2 class="text-lg font-semibold text-white flex items-center">
+                        <i class="fa-solid fa-user-plus text-emerald-400 mr-2.5"></i> Visitor Details
+                    </h2>
+                    <button type="button" id="resetBtn" class="text-xs font-medium text-slate-400 hover:text-white transition-colors bg-slate-700/50 hover:bg-slate-700 px-3 py-1.5 rounded-lg border border-slate-600/50">
+                        <i class="fa-solid fa-rotate-right mr-1"></i> Reset Form
+                    </button>
+                </div>
+
+                <form id="visitorForm" class="space-y-4">
+                    <!-- House/Unit No. -->
+                    <div>
+                        <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1.5" for="unitNo">
+                            House / Unit No. <span class="text-emerald-400">*</span>
+                        </label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-500">
+                                <i class="fa-solid fa-house"></i>
+                            </span>
+                            <input type="text" id="unitNo" required placeholder="e.g. 59, Jalan Palma 33/36"
+                                class="w-full pl-10 pr-4 py-3 bg-slate-900/80 border border-slate-700 rounded-xl text-white placeholder-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all">
+                        </div>
+                    </div>
+
+                    <!-- Visitor Name -->
+                    <div>
+                        <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1.5" for="visitorName">
+                            Visitor Name <span class="text-emerald-400">*</span>
+                        </label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-500">
+                                <i class="fa-solid fa-user"></i>
+                            </span>
+                            <input type="text" id="visitorName" required placeholder="e.g. Lim Keow Peh"
+                                class="w-full pl-10 pr-4 py-3 bg-slate-900/80 border border-slate-700 rounded-xl text-white placeholder-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all">
+                        </div>
+                    </div>
+
+                    <!-- Vehicle No. -->
+                    <div>
+                        <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1.5" for="vehicleNo">
+                            Vehicle No. <span class="text-slate-500 font-normal">(Optional)</span>
+                        </label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-500">
+                                <i class="fa-solid fa-car"></i>
+                            </span>
+                            <input type="text" id="vehicleNo" placeholder="e.g. PHL 39"
+                                class="w-full pl-10 pr-4 py-3 bg-slate-900/80 border border-slate-700 rounded-xl text-white placeholder-slate-500 text-sm uppercase focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <!-- Date of Visit -->
+                        <div>
+                            <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1.5" for="dateOfVisit">
+                                Date of Visit <span class="text-emerald-400">*</span>
+                            </label>
+                            <div class="relative">
+                                <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-500">
+                                    <i class="fa-regular fa-calendar"></i>
+                                </span>
+                                <input type="date" id="dateOfVisit" required
+                                    class="w-full pl-10 pr-4 py-3 bg-slate-900/80 border border-slate-700 rounded-xl text-white text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all cursor-pointer">
+                            </div>
+                        </div>
+
+                        <!-- Arrival Time -->
+                        <div>
+                            <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1.5" for="arrivalTime">
+                                Arrival Time <span class="text-emerald-400">*</span>
+                            </label>
+                            <div class="relative">
+                                <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-500">
+                                    <i class="fa-regular fa-clock"></i>
+                                </span>
+                                <input type="time" id="arrivalTime" required
+                                    class="w-full pl-10 pr-4 py-3 bg-slate-900/80 border border-slate-700 rounded-xl text-white text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all cursor-pointer">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Target WhatsApp Number -->
+                    <div>
+                        <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1.5" for="whatsappNumber">
+                            Security Guard WhatsApp No.
+                        </label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-emerald-400">
+                                <i class="fa-brands fa-whatsapp"></i>
+                            </span>
+                            <input type="text" id="whatsappNumber" value="+60 11-1422 3379"
+                                class="w-full pl-10 pr-4 py-3 bg-slate-900/80 border border-slate-700 rounded-xl text-emerald-300 font-mono text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all">
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <div class="bg-slate-800/40 border border-slate-700/60 rounded-2xl p-5 sm:p-6 backdrop-blur-md">
+                <div class="flex items-center justify-between mb-3">
+                    <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center">
+                        <i class="fa-solid fa-eye mr-2 text-emerald-400"></i> Live WhatsApp Preview
+                    </h3>
+                    <button type="button" id="copyBtn" class="text-xs font-medium text-emerald-400 hover:text-emerald-300 transition-colors flex items-center bg-emerald-500/10 hover:bg-emerald-500/20 px-3 py-1.5 rounded-lg border border-emerald-500/20">
+                        <i class="fa-regular fa-copy mr-1.5"></i> Copy Text
+                    </button>
+                </div>
+
+                <div id="previewBox" class="bg-slate-950/70 border border-slate-800 rounded-xl p-4 font-mono text-xs sm:text-sm text-slate-200 whitespace-pre-line leading-relaxed shadow-inner">
+                    <!-- Dynamically updated preview text -->
+                </div>
+            </div>
+
+            <div class="pt-2">
+                <button type="button" id="sendWhatsappBtn" class="w-full bg-emerald-600 hover:bg-emerald-500 active:bg-emerald-700 text-white font-semibold py-4 px-6 rounded-xl shadow-lg shadow-emerald-900/30 flex items-center justify-center space-x-3 transition-all transform active:scale-[0.99] text-base cursor-pointer border border-emerald-500/40">
+                    <i class="fa-brands fa-whatsapp text-xl"></i>
+                    <span>Send to Security Guard (+60 11-1422 3379)</span>
+                </button>
+            </div>
+
+        </div>
+    </main>
+
+    <footer class="py-4 text-center text-xs text-slate-500 border-t border-slate-800/50">
+        Visitor Pre-Registration System &bull; Secure Gate Access
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const unitNoInput = document.getElementById('unitNo');
+            const visitorNameInput = document.getElementById('visitorName');
+            const vehicleNoInput = document.getElementById('vehicleNo');
+            const dateOfVisitInput = document.getElementById('dateOfVisit');
+            const arrivalTimeInput = document.getElementById('arrivalTime');
+            const whatsappNumberInput = document.getElementById('whatsappNumber');
+            
+            const previewBox = document.getElementById('previewBox');
+            const sendWhatsappBtn = document.getElementById('sendWhatsappBtn');
+            const copyBtn = document.getElementById('copyBtn');
+            const resetBtn = document.getElementById('resetBtn');
+            const toast = document.getElementById('toast');
+            const toastMessage = document.getElementById('toastMessage');
+            const toastIcon = document.getElementById('toastIcon');
+
+            // Set default values matching example
+            unitNoInput.value = '59, Jalan Palma 33/36';
+            visitorNameInput.value = 'Lim Keow Peh';
+            vehicleNoInput.value = 'PHL 39';
+
+            // Default date: Today or specific demo date (e.g., Sep 14 current year or future)
+            const now = new Date();
+            const year = now.getFullYear();
+            dateOfVisitInput.value = `${year}-09-14`;
+            arrivalTimeInput.value = '20:45'; // 8:45pm in 24-hr format for input control
+
+            // Helper to format date into "14 Sep"
+            function formatDateDisplay(dateString) {
+                if (!dateString) return '[Date of Visit]';
+                const parts = dateString.split('-');
+                if (parts.length !== 3) return dateString;
+                const yearNum = parseInt(parts[0], 10);
+                const monthNum = parseInt(parts[1], 10);
+                const dayNum = parseInt(parts[2], 10);
+
+                const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                const monthStr = months[monthNum - 1] || '';
+                return `${dayNum} ${monthStr}`;
+            }
+
+            // Helper to format time into "8:45pm"
+            function formatTimeDisplay(timeString) {
+                if (!timeString) return '[Arrival Time]';
+                const parts = timeString.split(':');
+                if (parts.length < 2) return timeString;
+                let hours = parseInt(parts[0], 10);
+                const minutes = parts[1];
+                const ampm = hours >= 12 ? 'pm' : 'am';
+                hours = hours % 12;
+                hours = hours ? hours : 12; // the hour '0' should be '12'
+                return `${hours}:${minutes}${ampm}`;
+            }
+
+            // Function to format the exact message
+            function generateMessage() {
+                const unit = unitNoInput.value.trim() || '[House/Unit No.]';
+                const name = visitorNameInput.value.trim() || '[Visitor Name]';
+                const vehicle = vehicleNoInput.value.trim() ? vehicleNoInput.value.trim().toUpperCase() : '-';
+                const dateFormatted = formatDateDisplay(dateOfVisitInput.value);
+                const timeFormatted = formatTimeDisplay(arrivalTimeInput.value);
+
+                return `VISITOR PRE-REGISTRATION
+House/Unit No.
+: ${unit}
+
+Visitor Name
+: ${name}
+
+Vehicle No.
+: ${vehicle}
+
+Date of Visit
+: ${dateFormatted}
+
+Arrival Time
+: ${timeFormatted}`;
+            }
+
+            // Update live preview box
+            function updatePreview() {
+                previewBox.textContent = generateMessage();
+            }
+
+            // Show toast message notification
+            function showToast(message, type = 'success') {
+                toastMessage.textContent = message;
+                if (type === 'success') {
+                    toast.className = 'transform transition-all duration-300 ease-out translate-y-0 opacity-100 p-4 rounded-xl border bg-emerald-500/10 border-emerald-500/30 text-emerald-300 text-sm flex items-center space-x-3 shadow-lg';
+                    toastIcon.className = 'fa-solid fa-circle-check text-emerald-400 text-lg';
+                } else {
+                    toast.className = 'transform transition-all duration-300 ease-out translate-y-0 opacity-100 p-4 rounded-xl border bg-rose-500/10 border-rose-500/30 text-rose-300 text-sm flex items-center space-x-3 shadow-lg';
+                    toastIcon.className = 'fa-solid fa-circle-exclamation text-rose-400 text-lg';
+                }
+
+                setTimeout(() => {
+                    toast.className = 'hidden transform transition-all duration-300 ease-out translate-y-2 opacity-0 p-4 rounded-xl border text-sm flex items-center space-x-3 shadow-lg';
+                }, 3500);
+            }
+
+            // Event Listeners for Live Preview update
+            [unitNoInput, visitorNameInput, vehicleNoInput, dateOfVisitInput, arrivalTimeInput].forEach(input => {
+                input.addEventListener('input', updatePreview);
+                input.addEventListener('change', updatePreview);
+            });
+
+            // Initial render
+            updatePreview();
+
+            // Copy button logic
+            copyBtn.addEventListener('click', () => {
+                const textToCopy = generateMessage();
+                const textArea = document.createElement('textarea');
+                textArea.value = textToCopy;
+                textArea.style.position = 'fixed';
+                document.body.appendChild(textArea);
+                textArea.focus();
+                textArea.select();
+                
+                try {
+                    const successful = document.execCommand('copy');
+                    if (successful) {
+                        showToast('Visitor pass details copied to clipboard!');
+                    } else {
+                        showToast('Failed to copy text.', 'error');
+                    }
+                } catch (err) {
+                    showToast('Unable to copy to clipboard.', 'error');
+                }
+                document.body.removeChild(textArea);
+            });
+
+            // Reset button handler
+            resetBtn.addEventListener('click', () => {
+                unitNoInput.value = '';
+                visitorNameInput.value = '';
+                vehicleNoInput.value = '';
+                dateOfVisitInput.value = '';
+                arrivalTimeInput.value = '';
+                updatePreview();
+                showToast('Form reset successfully.');
+            });
+
+            // Send via WhatsApp handler
+            sendWhatsappBtn.addEventListener('click', () => {
+                if (!unitNoInput.value.trim() || !visitorNameInput.value.trim() || !dateOfVisitInput.value.trim() || !arrivalTimeInput.value.trim()) {
+                    showToast('Please fill in all mandatory fields before sending.', 'error');
+                    return;
+                }
+
+                const rawPhone = whatsappNumberInput.value.trim();
+                const cleanPhone = rawPhone.replace(/[\s\-\+]/g, '');
+                const message = generateMessage();
+                const encodedMessage = encodeURIComponent(message);
+
+                const whatsappUrl = `https://wa.me/${cleanPhone}?text=${encodedMessage}`;
+                window.open(whatsappUrl, '_blank');
+                showToast('Opening WhatsApp to send pass to security guard!');
+            });
+        });
+    </script>
+</body>
+</html>
